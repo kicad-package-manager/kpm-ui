@@ -1,17 +1,18 @@
 import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import './icons.js';
-
 import './index.scss';
-import App from './components/App';
+import App from 'components/App';
+import { AuthProvider } from 'contexts/AuthContext.js';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+
+root.render(
   <Router>
-    <App />
-  </Router>,
-  document.getElementById('root')
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </Router>
 );

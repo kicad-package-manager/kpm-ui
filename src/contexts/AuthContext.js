@@ -1,10 +1,17 @@
 import { differenceInMilliseconds, isBefore, parseISO } from 'date-fns';
-import { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState, createContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const authUrl = `${API_URL}/auth`;
 
-export default function useAuth() {
+export const AuthContext = createContext({
+  isLoggedIn: () => false,
+  token: null,
+  expiration: null
+});
+
+export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [expiration, setExpiration] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,5 +46,13 @@ export default function useAuth() {
     return () => clearInterval(intervalId);
   }, [searchParams, token, setSearchParams]);
 
-  return { isLoggedIn, token };
-}
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, token, expiration }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};

@@ -1,8 +1,9 @@
-import useAuth from 'hooks/useAuth';
 import { Fragment } from 'react';
 
+import useAuthContext from 'hooks/useAuthContext';
+
 export default function App() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuthContext();
 
   return (
     <Fragment>
