@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { resolve } from 'path';
 import HtmlPlugin from 'html-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
@@ -6,6 +8,7 @@ import StylelintPlugin from 'stylelint-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { CleanWebpackPlugin as CleanPlugin } from 'clean-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import { DefinePlugin } from 'webpack';
 
 const dev = process.env.NODE_ENV === 'development';
 
@@ -23,7 +26,10 @@ const plugins = [
     template: './src/index.html'
   }),
   new ESLintPlugin(),
-  new MiniCssExtractPlugin()
+  new MiniCssExtractPlugin(),
+  new DefinePlugin({
+    API_URL: JSON.stringify(process.env.API_URL)
+  })
 ];
 
 export default {
