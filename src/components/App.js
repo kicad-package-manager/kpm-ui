@@ -1,14 +1,13 @@
-import { Fragment } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-import useAuthContext from 'hooks/useAuthContext';
+import Home from 'pages/home';
+import Packages from 'pages/packages';
 
 export default function App() {
-  const { isLoggedIn } = useAuthContext();
-
   return (
-    <Fragment>
-      <h1>Hello {isLoggedIn() ? 'User' : 'Guest'}</h1>
-      <h2>You are here.</h2>
-    </Fragment>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/packages" element={<Packages />} />
+    </Routes>
   );
 }

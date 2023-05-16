@@ -7,6 +7,8 @@ const authUrl = `${API_URL}/auth`;
 
 export const AuthContext = createContext({
   isLoggedIn: () => false,
+  login: () => {},
+  logout: () => {},
   token: null,
   expiration: null
 });
@@ -22,11 +24,25 @@ export const AuthProvider = ({ children }) => {
     [expiration, token]
   );
 
+  const login = useCallback(() => {
+    if (token) {
+      return;
+    }
+
+    window.location.href = authUrl;
+  }, [token]);
+
+  const logout = useCallback(() => {
+    if (!token) {
+      return;
+    }
+
+    setToken(null);
+    setExpiration(null);
+  }, [token]);
+
   useEffect(() => {
     if (!searchParams.has('token') || !searchParams.has('expiresAt')) {
-      if (!token) {
-        window.location.href = authUrl;
-      }
       return;
     }
 
@@ -44,10 +60,12 @@ export const AuthProvider = ({ children }) => {
     }, Math.max(0, expirationMs - 30000));
 
     return () => clearInterval(intervalId);
-  }, [searchParams, token, setSearchParams]);
+  }, [searchParams, setSearchParams]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, token, expiration }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, token, expiration, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
