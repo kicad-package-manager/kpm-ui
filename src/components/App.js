@@ -8,6 +8,7 @@ const Package = lazy(() => import('pages/package'));
 const Packages = lazy(() => import('pages/packages'));
 const User = lazy(() => import('pages/user'));
 const Users = lazy(() => import('pages/users'));
+const TermsOfService = lazy(() => import('pages/termsOfService'));
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/package/:uuid" element={<Package />} />
         <Route path="/users" element={<Users />} />
         <Route path="/user/:uuid" element={<User />} />
+        <Route path="/terms" element={<TermsOfService />} />
       </Routes>
     </Suspense>
   );
