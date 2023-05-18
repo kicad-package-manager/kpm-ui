@@ -2,7 +2,7 @@ import { formatRelative, parseISO } from 'date-fns';
 import { faBoxesPacking, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, Spinner, Table, Row, Col, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import ErrorCard from 'components/ErrorCard';
 import Layout from 'components/Layout';
@@ -12,6 +12,7 @@ import useApi from 'hooks/useApi';
 const packageListUrl = `${API_URL}/packages`;
 
 export default function Packages() {
+  const [searchParams] = useSearchParams();
   const { isLoggedIn } = useAuthContext();
   const { isLoading, error, data } = useApi(['packages'], packageListUrl);
 
@@ -44,24 +45,30 @@ export default function Packages() {
             </thead>
             <tbody>
               {data.length ? (
-                data.map((row) => (
-                  <tr key={row.id}>
-                    <td>
-                      <Link to={`/package/${row.id}`}>{row.name}</Link>
-                    </td>
-                    <td>
-                      <Link to={`/user/${row.user.username}`}>
-                        {row.user.username}
-                      </Link>
-                    </td>
-                    <td title={row.createdAt}>
-                      {formatRelative(parseISO(row.createdAt), Date.now())}
-                    </td>
-                    <td title={row.updatedAt}>
-                      {formatRelative(parseISO(row.updatedAt), Date.now())}
-                    </td>
-                  </tr>
-                ))
+                data
+                  .filter(
+                    (row) =>
+                      !searchParams.has('user') ||
+                      row.user.id === searchParams.get('user')
+                  )
+                  .map((row) => (
+                    <tr key={row.id}>
+                      <td>
+                        <Link to={`/package/${row.id}`}>{row.name}</Link>
+                      </td>
+                      <td>
+                        <Link to={`/user/${row.user.username}`}>
+                          {row.user.username}
+                        </Link>
+                      </td>
+                      <td title={row.createdAt}>
+                        {formatRelative(parseISO(row.createdAt), Date.now())}
+                      </td>
+                      <td title={row.updatedAt}>
+                        {formatRelative(parseISO(row.updatedAt), Date.now())}
+                      </td>
+                    </tr>
+                  ))
               ) : (
                 <tr>
                   <td colSpan={4}>No packages to show!</td>
