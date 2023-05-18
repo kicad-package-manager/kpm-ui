@@ -1,13 +1,24 @@
+import { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import Home from 'pages/home';
-import Packages from 'pages/packages';
+import Loader from 'components/Loader';
+
+const Home = lazy(() => import('pages/home'));
+const Package = lazy(() => import('pages/package'));
+const Packages = lazy(() => import('pages/packages'));
+const User = lazy(() => import('pages/user'));
+const Users = lazy(() => import('pages/users'));
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/packages" element={<Packages />} />
-    </Routes>
+    <Suspense fallback={<Loader />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/packages" element={<Packages />} />
+        <Route path="/package/:uuid" element={<Package />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/user/:uuid" element={<User />} />
+      </Routes>
+    </Suspense>
   );
 }
