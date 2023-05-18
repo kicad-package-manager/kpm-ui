@@ -1,25 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
+import { faBox } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { format, parseISO } from 'date-fns';
 import { Card, Col, Row, Spinner, Table } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import Layout from 'components/Layout';
-import { format, parseISO } from 'date-fns';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBox } from '@fortawesome/free-solid-svg-icons';
+import useApi from 'hooks/useApi';
 
 const packageListUrl = `${API_URL}/package`;
 
 export default function Package() {
   const { uuid } = useParams();
-  const { isLoading, error, data } = useQuery({
-    queryKey: ['package', uuid],
-    queryFn: async () => {
-      const result = await fetch(`${packageListUrl}/uuid/${uuid}`);
-
-      return await result.json();
-    },
-    refetchOnWindowFocus: false
-  });
+  const { isLoading, error, data } = useApi(
+    ['package', uuid],
+    `${packageListUrl}/${uuid}?all_releases=true`
+  );
 
   if (!uuid) {
     return null;
@@ -44,11 +39,11 @@ export default function Package() {
           <Row>
             <Col xs={12}>
               First uploaded on {format(parseISO(data.createdAt), 'yyyy-MM-dd')}{' '}
-              by {data.user.username}, there are {data.releases.length}{' '}
+              by {data.user.username}, there are {data.releases?.length}{' '}
               releases.
             </Col>
           </Row>
-          {Array.isArray(data.releases) && Boolean(data.releases.length) && (
+          {Array.isArray(data.releases) && Boolean(data.releases?.length) && (
             <Row>
               <Col xs={12}>
                 <Table>
