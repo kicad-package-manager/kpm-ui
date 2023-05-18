@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
 
     const expirationMs = differenceInMilliseconds(Date.now(), newExpiration);
 
+    // refresh the token 30 seconds before it expires
     const intervalId = setInterval(() => {
       window.location.href = authUrl;
     }, Math.max(0, expirationMs - 30000));
