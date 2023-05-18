@@ -7,7 +7,7 @@ import ErrorCard from 'components/ErrorCard';
 import Layout from 'components/Layout';
 import useApi from 'hooks/useApi';
 
-const userDetailsUrl = `${API_URL}/user/uuid`;
+const userDetailsUrl = `${API_URL}/user`;
 
 export default function User() {
   const { uuid } = useParams();
