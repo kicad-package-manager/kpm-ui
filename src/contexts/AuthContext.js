@@ -29,7 +29,9 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    window.location.href = authUrl;
+    window.location.href = `${authUrl}?continueUrl=${encodeURIComponent(
+      window.location.href
+    )}`;
   }, [token]);
 
   const logout = useCallback(() => {
@@ -57,7 +59,9 @@ export const AuthProvider = ({ children }) => {
 
     // refresh the token 30 seconds before it expires
     const intervalId = setInterval(() => {
-      window.location.href = authUrl;
+      window.location.href = `${authUrl}?continueUrl=${encodeURIComponent(
+        window.location.href
+      )}`;
     }, Math.max(0, expirationMs - 30000));
 
     return () => clearInterval(intervalId);
